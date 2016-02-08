@@ -13,7 +13,7 @@ def parseData():
     client = MongoClient()
     texts = client.test.texts
     texts.remove()
-    countVideo = 10
+    countVideo = 2400
     for i in range(1, countVideo+1):
         srt = requests.get("http://www.ted.com/talks/subtitles/id/%s/lang/en/format/srt"%(i,))
         lst = str(srt.text).split('\n\n')
@@ -27,8 +27,10 @@ def parseData():
             'text': text
         }
         texts.insert_one(doc)
+        print(i)
 global p_stemmer
 def stemmer(stemmer, word):
+    #return word
     return stemmer.stem(word)
 
 
@@ -38,8 +40,23 @@ def textToWordList(txt):
     badword =[
         'so',
         'to',
+        're',
+        've',
         's',
-        't'
+        't',
+        'can',
+        'go',
+        'one',
+        'like',
+        'now',
+        'see',
+        'look',
+        'know',
+        'm',
+        'just',
+        'now',
+        'thing',
+        'applaus'
     ]
     stop_w =  [stemmer(p_stemmer, i) for i in get_stop_words('en')]
     badword = [stemmer(p_stemmer, i) for i in badword]
@@ -58,10 +75,10 @@ def analysis():
     wordLists = []
     for text in texts.find():
         wordLists.append(textToWordList(text['text']))
-
+    print("WordLists builded")
     dictionary = gensim.corpora.Dictionary(wordLists)
     corpus = [dictionary.doc2bow(text) for text in wordLists]
-    ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=6, id2word = dictionary, passes=20)
+    ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=10, id2word = dictionary, passes=20)
     ldamodel.save("my_model.txt")
     for topic in ldamodel.print_topics(num_words=7):
         print(topic)
@@ -73,6 +90,6 @@ def analysis():
 
 
 if __name__ == "__main__":
-    # parseData()
+    #parseData()
     analysis()
 
