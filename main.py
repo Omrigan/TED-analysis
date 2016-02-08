@@ -1,6 +1,6 @@
 from flask import Flask
 from stop_words import get_stop_words
-from nltk.stem.snowball import RussianStemmer
+from nltk.stem.snowball import RussianStemmer, EnglishStemmer
 from nltk.tokenize import RegexpTokenizer
 import gensim, re
 import requests
@@ -27,19 +27,26 @@ def parseData():
             'text': text
         }
         texts.insert_one(doc)
+global p_stemmer
+def stemmer(stemmer, word):
+    return stemmer.stem(word)
+
 
 def textToWordList(txt):
-    p_stemmer = RussianStemmer()
+    p_stemmer = EnglishStemmer()
     tokenizer = RegexpTokenizer(r'\w+')
     badword =[
         'so',
-        'to'
+        'to',
+        's',
+        't'
     ]
-    stop_w =  [p_stemmer.stem(i) for i in get_stop_words('en')]
-    badword = [p_stemmer.stem(i) for i in badword(txt)]
+    stop_w =  [stemmer(p_stemmer, i) for i in get_stop_words('en')]
+    badword = [stemmer(p_stemmer, i) for i in badword]
     #r = re.compile('^[а-я]+$')
     txt = txt.lower()
-    tokens = [p_stemmer.stem(i) for i in tokenizer.tokenize(txt)]
+    tokens = tokenizer.tokenize(txt)
+    tokens = [stemmer(p_stemmer, i) for i in tokens]
     tokens = [i for i in tokens if not i in stop_w]
     tokens = [i for i in tokens if not i in badword]
     return tokens
