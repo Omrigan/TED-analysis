@@ -2,9 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Topics</title>
 </head>
 <body>
+{% for t in topics %}
+    {{t.id }}<br>
+    {{t.keywords}}<br>
+    {{t.rating}}<br>
+    {{t.ratingPercent}} <br>
+
+    <hr>
+{% endfor%}
 
 </body>
 </html>

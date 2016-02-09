@@ -82,7 +82,12 @@ def textToWordList(txt):
         'want',
         'make',
         'get',
-        'realli'
+        'realli',
+        'peopl',
+        'use',
+        'we',
+        'us',
+        'well'
     ]
     stop_w = [stemmer(p_stemmer, i) for i in get_stop_words('en')]
     badword = [stemmer(p_stemmer, i) for i in badword]
@@ -144,23 +149,26 @@ def analysisTalks():
             rating_sum['view'] += topic[1] * talk['views']
             rating_sum['discuss'] += topic[1] * talk['comments']
     for topic in topics_dict.values():
-        topic['rating-percent']={}
+        topic['ratingPercent']={}
         for rat in topic['rating']:
-            topic['rating-percent'][rat] = topic['rating'][rat]*100/rating_sum[rat]
+            topic['ratingPercent'][rat] = topic['rating'][rat]*100/rating_sum[rat]
         print(topic)
         topics.insert(topic)
 
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route("/")
 def getTopics():
     client = MongoClient()
     topics = client.test.topics
-    return str(list(topics.find()))
+    return render_template('topics.html', topics=list(topics.find()))
 
 
-
+@app.route("/analysis-talks")
+def analysisTalksWeb():
+    analysisTalks()
+    return 'ok'
 
 
 
@@ -168,5 +176,4 @@ def getTopics():
 if __name__ == "__main__":
     # parseData()
     # analysis()
-    #analysisTalks()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
