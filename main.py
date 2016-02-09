@@ -5,6 +5,7 @@ from nltk.tokenize import RegexpTokenizer
 import gensim, re
 import requests
 from pymongo import MongoClient
+import pyquery
 
 
 
@@ -16,19 +17,38 @@ def parseData():
     countVideo = 2400
     for i in range(1, countVideo+1):
         srt = requests.get("http://www.ted.com/talks/subtitles/id/%s/lang/en/format/srt"%(i,))
-        lst = str(srt.text).split('\n\n')
-        lst = list(map(lambda s: s.split('\n')[2:], lst))
-        text = ""
-        for l in lst:
-            for s in l:
-                text+= s+ "\n"
-        doc = {
-            'id': i,
-            'text': text
-        }
-        texts.insert_one(doc)
-        print(i)
+
+        if(srt.status_code==200 and requests.get('http://www.ted.com/talks/%s'%(i,)).status_code==200):
+            lst = str(srt.text).split('\n\n')
+            lst = list(map(lambda s: s.split('\n')[2:], lst))
+            text = ""
+            for l in lst:
+                for s in l:
+                    text+= s+ "\n"
+
+            pq = pyquery.PyQuery(url='http://www.ted.com/talks/%s'%(i,))
+
+            views = pq('div#sharing-count').text()
+            comments = pq('.talk-section .h11').text()
+            title = pq('#player-hero .player-hero__title__content').text()
+            speaker = pq('#player-hero .player-hero__speaker').text()[:-1 ]
+            r = re.compile('\D')
+            views=r.sub('',views)
+            comments=r.sub('', comments)
+            views = int(views)
+            comments = int(comments)
+            talk = {
+                'id': i,
+                'title': title,
+                'speaker': speaker,
+                'text': text,
+                'views': views,
+                'comments': comments
+            }
+            texts.insert_one(talk)
+            print(i)
 global p_stemmer
+
 def stemmer(stemmer, word):
     #return word
     return stemmer.stem(word)
@@ -73,15 +93,30 @@ def analysis():
     client = MongoClient()
     texts = client.test.texts
     wordLists = []
-    for text in texts.find():
-        wordLists.append(textToWordList(text['text']))
+    for talk in texts.find():
+        wordLists.append(textToWordList(talk['text']))
     print("WordLists builded")
     dictionary = gensim.corpora.Dictionary(wordLists)
     corpus = [dictionary.doc2bow(text) for text in wordLists]
-    ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=10, id2word = dictionary, passes=20)
-    ldamodel.save("my_model.txt")
+    ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=15, id2word = dictionary, passes=20)
+    ldamodel.save("my_model")
     for topic in ldamodel.print_topics(num_words=7):
         print(topic)
+
+
+def analysisTexts():
+    ldamodel = gensim.models.ldamodel.LdaModel.load("my_model")
+    client = MongoClient()
+    texts = client.test.texts
+    for talk in texts.find()[0:3]:
+        tokens =  textToWordList(talk['text'])
+        dictionary = gensim.corpora.Dictionary([tokens, ])
+        print(ldamodel[dictionary.doc2bow(tokens)])
+
+
+
+
+
 
 
 
@@ -90,6 +125,6 @@ def analysis():
 
 
 if __name__ == "__main__":
-    #parseData()
-    analysis()
+    parseData()
+    #analysis()
 
