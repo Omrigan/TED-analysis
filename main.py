@@ -76,7 +76,12 @@ def textToWordList(txt):
         'just',
         'now',
         'thing',
-        'applaus'
+        'applaus',
+        'think',
+        'want',
+        'make',
+        'get',
+        'realli'
     ]
     stop_w =  [stemmer(p_stemmer, i) for i in get_stop_words('en')]
     badword = [stemmer(p_stemmer, i) for i in badword]
@@ -104,10 +109,12 @@ def analysis():
         print(topic)
 
 
-def analysisTexts():
+def analysisTalks():
     ldamodel = gensim.models.ldamodel.LdaModel.load("my_model")
     client = MongoClient()
     texts = client.test.texts
+    for topic in ldamodel.show_topics(num_words=7):
+        print(topic)
     for talk in texts.find()[0:3]:
         tokens =  textToWordList(talk['text'])
         dictionary = gensim.corpora.Dictionary([tokens, ])
@@ -125,6 +132,7 @@ def analysisTexts():
 
 
 if __name__ == "__main__":
-    parseData()
-    #analysis()
+    #parseData()
+    analysis()
+    #analysisTalks()
 
