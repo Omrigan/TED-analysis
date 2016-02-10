@@ -13,12 +13,28 @@
     <a href="/about">How we did it</a>
     <hr>
     {% for t in topics %}
-    {{t.id }}<br>
-    {{t.keywords}}<br>
-    {{t.rating}}<br>
-    {{t.ratingPercent}} <br>
+    <div class="col-md-12">
+        <h3>{{t.name}}</h3>
+        <b> {{t.id }}</b> <br>
+        <h5>Keywords</h5>
+        {% for k in t.keywords %}
+        <b>{{k}} </b>
+        {% endfor %}
+        <h5>Top talks about it</h5>
+        {% for k in t.talks %}
+        <b><a href="http://www.ted.com/talks/{{k[0]}}">{{k[0]}}</a></b>
+        {% endfor %}
 
-    <hr>
+        <h5>Global rating</h5>
+        <b>Speak:</b> {{t.ratingPercent['speak']}}% <br>
+        <b>Views:</b> {{t.ratingPercent['view']}}% <br>
+        <b>Discuss:</b> {{t.ratingPercent['discuss']}}% <br>
+        <h5>Local rating</h5>
+        <b>Views: </b> {{t.ratingLocal['view']}}% of speaks <br>
+        <b>Discuss: </b> {{t.ratingLocal['discuss']}}% of speaks <br>
+
+    </div>
+
     {% endfor%}
 
 </div>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>TED talks topics analyser</h1>
+    Okay, well, I am a python developer, my name is <a href="http://omrigan.cf/">Oleg Vasilev</a>.
+    This is a data analysis experiment made for <a href="http://goto.msk.ru/hackathon/">GoTo Hack</a>. <br>
+    The main idea is try to determine top-20 topics of TED talks.
+    <h2>Algorithm</h2>
+    The problem contains three unrelated parts:
+    <h3>Parse data</h3>
+    The easiest part. Just downloading srt files, parsing data from web page and saving it to MongoDB collection
+    <h3>Model building</h3>
+    I am using genism python library to build the
+    <a href="https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">LDA model </a> ans save it to my_model file
+    <h3>Talks analysis</h3>
+    Here we are processing each talk to recognize which topics are mentioned in the subtitles, and its weight. <br>
+    For each topic then we find which part of total speaks, views and discussions it consist. <br>
+    All source code is hosted on <a href="https://github.com/Omrigan/TED-analysis"> GitHub </a>
+    <h2>Used technologies</h2>
+    <ul>
+        <li>Python</li>
+        <li><a href="https://radimrehurek.com/gensim/">Genism</a> for linguistic analysis</li>
+        <li><a href="http://flask.pocoo.org/">Flask</a> for data presentation</li>
+        <li><a href="https://pythonhosted.org/pyquery/">Pyquery</a> for parsing</li>
+        <li>and so on...</li>
+        <li><a href="https://www.mongodb.org/">MongoDB</a> for storage</li>
+        <li><a href="https://www.digitalocean.com/">Digital Ocean</a> for hosting</li>
+    </ul>
+
+</div>
+</body>
+</html>

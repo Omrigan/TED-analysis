@@ -18,7 +18,9 @@ def getTopics():
     return render_template('topics.html', topics=list(topics.find()))
 
 
-
+@app.route("/about")
+def about():
+    return render_template('about.html')
 
 
 

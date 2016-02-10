@@ -1,7 +1,7 @@
 stop_words
 flask
 nltk
-genism
+gensim
 requests
 pyquery
 pymongo
