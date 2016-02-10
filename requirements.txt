@@ -1,0 +1,7 @@
+stop_words
+flask
+nltk
+genism
+requests
+pyquery
+pymongo
