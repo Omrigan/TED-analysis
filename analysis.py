@@ -1,5 +1,4 @@
 #!/usr/bin/python3.4
-from flask import Flask
 from stop_words import get_stop_words
 from nltk.stem.snowball import RussianStemmer, EnglishStemmer
 from nltk.tokenize import RegexpTokenizer
@@ -8,13 +7,13 @@ import requests
 from pymongo import MongoClient
 import pyquery
 import logging
-
+import secret_settings
 
 
 
 
 def parseData():
-    client = MongoClient()
+    client = MongoClient(secret_settings.address)
     texts = client.test.texts
     texts.remove()
     countVideo = 2400
@@ -86,7 +85,7 @@ topics_count = 20
 
 def analysis():
     logging.info("Model building started")
-    client = MongoClient()
+    client = MongoClient(secret_settings.address)
     texts = client.test.texts
     wordLists = []
     for talk in texts.find():
@@ -101,7 +100,7 @@ def analysis():
 def analysisTalks():
     logging.info('Talk analysis started')
     ldamodel = gensim.models.ldamodel.LdaModel.load("my_model")
-    client = MongoClient()
+    client = MongoClient(secret_settings.address)
     texts = client.test.texts
     topics = client.test.topics
     topics.remove()

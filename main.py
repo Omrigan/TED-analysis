@@ -1,20 +1,14 @@
 #!/usr/bin/python3.4
-from flask import Flask
-from stop_words import get_stop_words
-from nltk.stem.snowball import RussianStemmer, EnglishStemmer
-from nltk.tokenize import RegexpTokenizer
-import gensim, re
-import requests
 from pymongo import MongoClient
 import pyquery
-
+import secret_settings
 
 from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route("/")
 def getTopics():
-    client = MongoClient()
+    client = MongoClient(secret_settings.address)
     topics = client.test.topics
     return render_template('topics.html', topics=list(topics.find()))
 

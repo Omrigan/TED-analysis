@@ -1,1 +1,4 @@
 .idea
+secret_settings.py
+report.txt
+__pycache__

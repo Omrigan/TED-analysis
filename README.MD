@@ -5,3 +5,4 @@ Made for GoTo Hack
 
 Deployed on http://ted.omrigan.cf/
 
+Full description on http://ted.omrigan.cf/about
