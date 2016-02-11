@@ -11,6 +11,7 @@ RUN apt-get install -y tar \
                    net-tools \
                    build-essential
 RUN apt-get install -y python3 python3-dev python3-pip
+RUN apt-get install -y python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
 ENV LANG en_US.UTF-8
 ADD . /var/www/ted-talks
 RUN pip3 install -r /var/www/ted-talks/requirements.txt

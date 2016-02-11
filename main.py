@@ -1,3 +1,4 @@
+#!/usr/bin/python3.4
 from flask import Flask
 from stop_words import get_stop_words
 from nltk.stem.snowball import RussianStemmer, EnglishStemmer
